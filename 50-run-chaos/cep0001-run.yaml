@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: cep0001-run
+  namespace: tekton-namespace
+spec:
+  params:
+    - name: namespace
+      value: chaos-namespace
+    - name: test
+      value: testvalue
+  pipelineRef:
+    name: cep0001

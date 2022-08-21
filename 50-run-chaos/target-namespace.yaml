@@ -1,0 +1,9 @@
+# Workaround in order to replace targets
+apiVersion: chaos.test.com/v1alpha1
+kind: TargetNamespace
+metadata:
+  # Modify it. Name of the target namespace
+  name: chaos-namespace
+  annotations:
+    config.kubernetes.io/local-config: "true"
+  namespace: tekton-namespace

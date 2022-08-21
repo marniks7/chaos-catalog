@@ -1,15 +1,13 @@
 apiVersion: kpt.dev/v1
 kind: Kptfile
 metadata:
-  name: tasks
+  name: pipeline-runs
   namespace: tekton-namespace
 info:
   emails:
     - marniks7@gmail.com
-  description: This is an example tasks
+  description: Chaos pipeline runs
 pipeline:
-  mutators:
-    - exec: 'kubectl kustomize -o tekton-catalog'
   validators:
     - image: gcr.io/kpt-fn/kubeval:v0.3
       configMap:
