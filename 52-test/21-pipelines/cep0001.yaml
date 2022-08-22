@@ -19,7 +19,7 @@ spec:
       params:
         - name: script
           value: |
-            kubectl get pods -n $(params.namespace)
+            kubectl get pods -n $(params.namespace) --insecure-skip-tls-verify
             echo "$(params.test)"
       workspaces:
         - name: kubeconfig-dir
@@ -30,7 +30,7 @@ spec:
       params:
         - name: script
           value: |
-            kubectl get pods -n $(params.namespace)
+            kubectl get pods -n $(params.namespace) --insecure-skip-tls-verify
             echo "test1"
       runAfter:
         - k-get-pods
@@ -43,7 +43,7 @@ spec:
       params:
         - name: script
           value: |
-            kubectl get pods -n $(params.namespace)
+            kubectl get pods -n $(params.namespace) --insecure-skip-tls-verify
             echo "test2"
       runAfter:
         - k-get-pods

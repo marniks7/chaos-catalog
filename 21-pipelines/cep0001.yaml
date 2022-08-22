@@ -17,6 +17,7 @@ spec:
       params:
         - name: script
           value: |
+            set -e
             kubectl get pods -n $(params.namespace)
             echo "$(params.test)"
       workspaces:
@@ -28,6 +29,7 @@ spec:
       params:
         - name: script
           value: |
+            set -e
             kubectl get pods -n $(params.namespace)
             echo "test1"
       runAfter:
@@ -41,6 +43,7 @@ spec:
       params:
         - name: script
           value: |
+            set -e
             kubectl get pods -n $(params.namespace)
             echo "test2"
       runAfter:

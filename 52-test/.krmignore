@@ -1,1 +1,2 @@
 10-tasks/kustomization.yaml
+50-run-chaos/kubeconfig.yaml

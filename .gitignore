@@ -72,3 +72,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 52-test/resourcegroup.yaml
+52-test/50-run-chaos/kubeconfig.yaml
+50-run-chaos/kubeconfig.yaml

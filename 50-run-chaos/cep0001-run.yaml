@@ -17,3 +17,4 @@ spec:
       value: testvalue
   pipelineRef:
     name: cep0001
+  status: Cancelled
