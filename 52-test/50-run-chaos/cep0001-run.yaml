@@ -18,3 +18,4 @@ spec:
     - name: kubeconfig-dir
       secret:
         secretName: kubeconfig-target-cluster
+  status: Cancelled
