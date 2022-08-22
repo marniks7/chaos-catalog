@@ -9,7 +9,7 @@ metadata: # kpt-merge: tekton-namespace/cep0001-run
 spec:
   params:
     - name: namespace
-      value: chaos-namespace
+      value: default
     - name: test
       value: testvalue
   pipelineRef:

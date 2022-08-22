@@ -19,6 +19,9 @@ spec:
           value: |
             kubectl get pods -n $(params.namespace)
             echo "$(params.test)"
+      workspaces:
+        - name: kubeconfig-dir
+          workspace: kubeconfig-dir
     - name: test
       taskRef:
         name: kubernetes-actions
@@ -29,6 +32,9 @@ spec:
             echo "test1"
       runAfter:
         - k-get-pods
+      workspaces:
+        - name: kubeconfig-dir
+          workspace: kubeconfig-dir
     - name: test2
       taskRef:
         name: kubernetes-actions
@@ -39,3 +45,9 @@ spec:
             echo "test2"
       runAfter:
         - k-get-pods
+      workspaces:
+        - name: kubeconfig-dir
+          workspace: kubeconfig-dir
+  workspaces:
+    - name: kubeconfig-dir
+
