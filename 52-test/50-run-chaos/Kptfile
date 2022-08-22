@@ -1,0 +1,31 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: 50-run-chaos
+upstream:
+  type: git
+  git:
+    repo: https://github.com/marniks7/chaos-catalog
+    directory: /50-run-chaos
+    ref: master
+  updateStrategy: resource-merge
+upstreamLock:
+  type: git
+  git:
+    repo: https://github.com/marniks7/chaos-catalog
+    directory: /50-run-chaos
+    ref: master
+    commit: 7125580c0c28313b91b371b7cef7e11ee4f531bd
+info:
+  emails:
+    - marniks7@gmail.com
+  description: Chaos pipeline runs
+pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/apply-replacements:v0.1.1
+      configPath: replacements.yaml
+  validators:
+    - image: gcr.io/kpt-fn/kubeval:v0.3
+      configMap:
+        ignore_missing_schemas: "true"
+        strict: "true"

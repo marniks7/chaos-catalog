@@ -1,0 +1,43 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata: # kpt-merge: tekton-namespace/cep0001
+  name: cep0001
+  namespace: tekton-namespace
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'tekton.dev|Pipeline|tekton-namespace|cep0001'
+spec:
+  params:
+    - name: namespace
+      type: string
+      description: Target namespace where to apply
+    - name: test
+      type: string
+  tasks:
+    - name: k-get-pods
+      taskRef:
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: |
+            kubectl get pods -n $(params.namespace)
+            echo "$(params.test)"
+    - name: test
+      taskRef:
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: |
+            kubectl get pods -n $(params.namespace)
+            echo "test1"
+      runAfter:
+        - k-get-pods
+    - name: test2
+      taskRef:
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: |
+            kubectl get pods -n $(params.namespace)
+            echo "test2"
+      runAfter:
+        - k-get-pods
