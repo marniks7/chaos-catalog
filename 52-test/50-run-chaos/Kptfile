@@ -15,7 +15,7 @@ upstreamLock:
     repo: https://github.com/marniks7/chaos-catalog
     directory: /50-run-chaos
     ref: master
-    commit: 7125580c0c28313b91b371b7cef7e11ee4f531bd
+    commit: eaccdb872a4f304caf603cb8125a19e3d697dd2a
 info:
   emails:
     - marniks7@gmail.com

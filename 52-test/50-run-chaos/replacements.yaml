@@ -15,3 +15,12 @@ replacements:
           kind: PipelineRun
         fieldPaths:
           - spec.params.[name=namespace].value
+  - source:
+      kind: Secret
+      name: kubeconfig-target-cluster
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: PipelineRun
+        fieldPaths:
+          - spec.workspaces.[name=kubeconfig-dir].secret.secretName

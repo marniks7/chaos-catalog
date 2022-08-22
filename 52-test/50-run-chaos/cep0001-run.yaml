@@ -14,3 +14,7 @@ spec:
       value: testvalue
   pipelineRef:
     name: cep0001
+  workspaces:
+    - name: kubeconfig-dir
+      secret:
+        secretName: kubeconfig-target-cluster
