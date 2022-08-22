@@ -3,6 +3,8 @@ kind: PipelineRun
 metadata:
   name: cep0001-run
   namespace: tekton-namespace
+  annotations:
+    config.kubernetes.io/depends-on: tekton.dev/namespaces/tekton-namespace/Pipeline/cep0001
 spec:
   params:
     - name: namespace

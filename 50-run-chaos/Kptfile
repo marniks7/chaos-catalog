@@ -8,6 +8,9 @@ info:
     - marniks7@gmail.com
   description: Chaos pipeline runs
 pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/apply-replacements:v0.1.1
+      configPath: replacements.yaml
   validators:
     - image: gcr.io/kpt-fn/kubeval:v0.3
       configMap:

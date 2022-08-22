@@ -8,12 +8,6 @@ info:
     - marniks7@gmail.com
   description: This is an example pipelines package for tekton
 pipeline:
-  mutators:
-    - image: gcr.io/kpt-fn/apply-replacements:v0.1.1
-      configPath: replacements.yaml
-    - image: gcr.io/kpt-fn/set-namespace:v0.1
-      configMap:
-        namespace: tekton-namespace
   validators:
     - image: gcr.io/kpt-fn/kubeval:v0.3
       configMap:

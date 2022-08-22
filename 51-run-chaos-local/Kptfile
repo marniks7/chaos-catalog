@@ -9,7 +9,7 @@ info:
   description: Parent for all chaos resources
 pipeline:
   mutators:
-    - image: gcr.io/kpt-fn/set-namespace:v0.1
+    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
       configMap:
         namespace: tekton-namespace
   validators:
