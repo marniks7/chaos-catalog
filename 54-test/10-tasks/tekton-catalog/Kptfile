@@ -2,7 +2,7 @@ apiVersion: kpt.dev/v1
 kind: Kptfile
 metadata:
   name: tekton-tasks
-  namespace: tekton-namespace
+  namespace: 54-test
 info:
   emails:
     - marniks7@gmail.com

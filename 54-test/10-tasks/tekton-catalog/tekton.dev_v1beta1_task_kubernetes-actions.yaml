@@ -11,7 +11,7 @@ metadata: # kpt-merge: tekton-namespace/kubernetes-actions
   labels:
     app.kubernetes.io/version: "0.2"
   name: kubernetes-actions
-  namespace: tekton-namespace
+  namespace: 54-test
 spec:
   description: This task is the generic kubectl CLI task which can be used to run all kinds of k8s commands
   params:

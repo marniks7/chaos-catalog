@@ -24,7 +24,7 @@ pipeline:
   mutators:
     - image: gcr.io/kpt-fn/set-namespace:v0.4.1
       configMap:
-        namespace: tekton-namespace
+        namespace: 54-test
   validators:
     - image: gcr.io/kpt-fn/kubeval:v0.3
       configMap:

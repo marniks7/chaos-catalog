@@ -23,4 +23,3 @@ replacements:
           kind: PipelineRun
         fieldPaths:
           - spec.workspaces.[name=kubeconfig-dir].secret.secretName
-
