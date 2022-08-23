@@ -73,4 +73,4 @@ fabric.properties
 
 52-test/resourcegroup.yaml
 52-test/50-run-chaos/kubeconfig.yaml
-50-run-chaos/kubeconfig.yaml
+chaos-catalog/50-run-chaos/kubeconfig.yaml
