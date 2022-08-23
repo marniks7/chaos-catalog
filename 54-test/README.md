@@ -6,7 +6,7 @@ Catalog for all chaos resources
 ## Usage
 
 ### Fetch the package
-`kpt pkg get https://github.com/marniks7/chaos-catalog/chaos-catalog chaos-catalog`
+`kpt pkg get https://github.com/marniks7/chaos-catalog chaos-catalog`
 Details: https://kpt.dev/reference/cli/pkg/get/
 
 ### View package content

@@ -1,0 +1,15 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: pipelines
+  namespace: tekton-namespace
+info:
+  emails:
+    - marniks7@gmail.com
+  description: This is an example pipelines package for tekton
+pipeline:
+  validators:
+    - image: gcr.io/kpt-fn/kubeval:v0.3
+      configMap:
+        ignore_missing_schemas: "true"
+        strict: "true"

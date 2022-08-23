@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata: # kpt-merge: tekton-namespace/cep0001-run
+  name: cep0001-run
+  namespace: tekton-namespace
+  annotations:
+    config.kubernetes.io/depends-on: tekton.dev/namespaces/tekton-namespace/Pipeline/cep0001
+    internal.kpt.dev/upstream-identifier: 'tekton.dev|PipelineRun|tekton-namespace|cep0001-run'
+spec:
+  workspaces:
+    - name: kubeconfig-dir
+      secret:
+        secretName: kubeconfig-target-cluster
+  params:
+    - name: namespace
+      value: chaos-namespace
+    - name: test
+      value: testvalue
+  pipelineRef:
+    name: cep0001
+  status: Cancelled
