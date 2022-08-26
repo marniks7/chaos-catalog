@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: cep0002-run
+  namespace: tekton-namespace
+  annotations:
+    config.kubernetes.io/depends-on: tekton.dev/namespaces/tekton-namespace/Pipeline/cep0002
+spec:
+  workspaces:
+    - name: kubeconfig-dir
+      secret:
+        secretName: kubeconfig-target-cluster
+  params:
+    - name: namespace
+      value: chaos-namespace
+    - name: chaos-mesh-yaml
+      value: |
+        # TBD include pod-kill.yaml
+        kind: PodChaos
+        apiVersion: chaos-mesh.org/v1alpha1
+        metadata:
+          namespace: chaos-namespace
+          generateName: pod-kill-
+          annotations:
+            config.kubernetes.io/local-config: "true"
+        spec:
+          selector:
+            namespaces:
+              - $(params.namespace)
+            labelSelectors:
+              app.kubernetes.io/component: master
+              app.kubernetes.io/name: redis
+          mode: one
+          action: pod-kill
+          gracePeriod: 0
+  pipelineRef:
+    name: cep0002
+  status: Cancelled

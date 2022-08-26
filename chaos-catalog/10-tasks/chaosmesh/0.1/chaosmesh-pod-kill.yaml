@@ -1,0 +1,61 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: chaosmesh-pod-kill
+  namespace: tekton-namespace
+spec:
+  description: Apply pod-failure with ChaosMesh
+  params:
+  - default:
+    - help
+    description: The Kubernetes CLI arguments to run
+    name: args
+    type: array
+  - default: gcr.io/cloud-builders/kubectl@sha256:8ab94be8b2b4f3d117f02d868b39540fddd225447abf4014f7ba4765cb39f753
+    description: Kubectl wrapper image
+    name: image
+  results:
+  - description: some result can be emitted if someone wants to.
+    name: output-result
+  steps:
+  - args:
+    - $(params.args)
+    image: $(params.image)
+    name: kubectl
+    script: |
+      #!/usr/bin/env bash
+
+      [[ "$(workspaces.manifest-dir.bound)" == "true" ]] && \
+      cd $(workspaces.manifest-dir.path)
+
+      [[ "$(workspaces.kubeconfig-dir.bound)" == "true" ]] && \
+      [[ -f $(workspaces.kubeconfig-dir.path)/kubeconfig ]] && \
+      export KUBECONFIG=$(workspaces.kubeconfig-dir.path)/kubeconfig
+
+      # TBD include pod-kill.yaml
+      cm=$(cat <<EOF
+      kind: PodChaos
+      apiVersion: chaos-mesh.org/v1alpha1
+      metadata:
+        namespace: $(params.namespace)
+        generateName: pod-failure-
+        annotations:
+          config.kubernetes.io/local-config: "true"
+      spec:
+        selector:
+          namespaces:
+            - $(params.namespace)
+          labelSelectors:
+            app.kubernetes.io/component: master
+            app.kubernetes.io/name: redis
+        mode: one
+        action: pod-kill
+        gracePeriod: 0
+      EOF
+      )
+      echo "${cm}" | kubectl apply -f -
+  workspaces:
+  - name: manifest-dir
+    optional: true
+  - name: kubeconfig-dir
+    optional: true

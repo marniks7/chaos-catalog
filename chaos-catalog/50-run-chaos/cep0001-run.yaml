@@ -13,8 +13,6 @@ spec:
   params:
     - name: namespace
       value: chaos-namespace
-    - name: test
-      value: testvalue
   pipelineRef:
     name: cep0001
   status: Cancelled

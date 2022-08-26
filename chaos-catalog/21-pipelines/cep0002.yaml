@@ -1,15 +1,18 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: cep0001
+  name: cep0002
   namespace: tekton-namespace
 spec:
-  description: |
+  description:
     TBD. include-file @cep0001.md
   params:
     - name: namespace
       type: string
       description: Target namespace where to apply
+    - name: chaos-mesh-yaml
+      type: string
+      description: Chaos Mesh pod kill yaml
   tasks:
     - name: k-get-pods-before
       taskRef:
@@ -19,15 +22,18 @@ spec:
           value: |
             set -e
             kubectl get pods -n $(params.namespace)
+            echo "$(params.test)"
       workspaces:
         - name: kubeconfig-dir
           workspace: kubeconfig-dir
     - name: apply-chaos
       taskRef:
-        name: chaosmesh-pod-kill
+        name: kubernetes-actions
       params:
-        - name: namespace
-          value: $(params.namespace)
+        - name: script
+          value: |
+            set -e
+            echo $(params.chaos-mesh-yaml) | kubectl apply -f -
       runAfter:
         - k-get-pods-before
       workspaces:
