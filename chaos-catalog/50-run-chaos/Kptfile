@@ -4,8 +4,6 @@ metadata:
   name: pipeline-runs
   namespace: tekton-namespace
 info:
-  emails:
-    - marniks7@gmail.com
   description: Chaos pipeline runs
 pipeline:
   mutators:

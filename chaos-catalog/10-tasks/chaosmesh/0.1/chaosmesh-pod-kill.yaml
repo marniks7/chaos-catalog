@@ -6,11 +6,9 @@ metadata:
 spec:
   description: Apply pod-failure with ChaosMesh
   params:
-  - default:
-    - help
-    description: The Kubernetes CLI arguments to run
-    name: args
-    type: array
+  - description: where to apply chaos
+    name: namespace
+    type: string
   - default: gcr.io/cloud-builders/kubectl@sha256:8ab94be8b2b4f3d117f02d868b39540fddd225447abf4014f7ba4765cb39f753
     description: Kubectl wrapper image
     name: image
@@ -18,9 +16,7 @@ spec:
   - description: some result can be emitted if someone wants to.
     name: output-result
   steps:
-  - args:
-    - $(params.args)
-    image: $(params.image)
+  - image: $(params.image)
     name: kubectl
     script: |
       #!/usr/bin/env bash

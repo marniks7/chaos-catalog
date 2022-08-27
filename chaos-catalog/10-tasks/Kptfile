@@ -4,8 +4,6 @@ metadata:
   name: tasks
   namespace: tekton-namespace
 info:
-  emails:
-    - marniks7@gmail.com
   description: Parent for all tekton tasks
 pipeline:
   validators:
