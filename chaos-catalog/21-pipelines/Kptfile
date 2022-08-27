@@ -4,8 +4,6 @@ metadata:
   name: pipelines
   namespace: tekton-namespace
 info:
-  emails:
-    - marniks7@gmail.com
   description: This is an example pipelines package for tekton
 pipeline:
   validators:
