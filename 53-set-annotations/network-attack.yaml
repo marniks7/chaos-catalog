@@ -1,0 +1,19 @@
+kind: NetworkChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: network-attack
+spec:
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app.kubernetes.io/component: replica
+      app.kubernetes.io/instance: redis
+  mode: all
+  action: loss
+  duration: 1m
+  loss:
+    loss: '100'
+    correlation: '0'
+  direction: to
