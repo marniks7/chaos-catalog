@@ -21,7 +21,6 @@ spec:
           value: |
             set -e
             kubectl get pods -n $(params.namespace)
-            echo "$(params.test)"
       workspaces:
         - name: kubeconfig-dir
           workspace: kubeconfig-dir
