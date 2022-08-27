@@ -9,3 +9,5 @@ params:
     value: tttt
 ```
 `nnnn` should be replaced to something else based on `name: namespace`
+
+Result: **passed**
