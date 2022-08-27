@@ -4,8 +4,7 @@ metadata:
   name: cep0002
   namespace: tekton-namespace
 spec:
-  description:
-    TBD. include-file @cep0001.md
+  description: TBD. include-file @cep0001.md
   params:
     - name: namespace
       type: string

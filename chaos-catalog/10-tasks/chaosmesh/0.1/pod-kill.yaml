@@ -2,7 +2,7 @@ kind: PodChaos
 apiVersion: chaos-mesh.org/v1alpha1
 metadata:
   namespace: $(params.namespace)
-  generateName: pod-kill-
+  name: pod-kill
   annotations:
     config.kubernetes.io/local-config: "true"
 spec:
