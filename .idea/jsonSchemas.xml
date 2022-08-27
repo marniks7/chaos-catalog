@@ -3,6 +3,22 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
+        <entry key="kptfile">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="kptfile" />
+              <option name="relativePathToSchema" value="https://raw.githubusercontent.com/GoogleContainerTools/kpt/main/site/reference/schema/kptfile/kptfile.yaml" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="chaos-catalog/Kptfile" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="kustomization.yaml">
           <value>
             <SchemaInfo>
