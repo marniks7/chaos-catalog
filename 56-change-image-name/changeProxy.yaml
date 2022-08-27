@@ -3,7 +3,7 @@ kind: StarlarkRun
 metadata:
   name: change-image-proxy
 params:
-  gcrioProxy: proxy.company.com
+  gcr.io: proxy.company.com
 source: |-
   def is_kpt_file(r):
     return r["kind"] == "Kptfile"
@@ -13,5 +13,5 @@ source: |-
         return
       for m in resource["pipeline"]["mutators"]:
         m["image"] = m["image"].replace("gcr.io", gcrioProxy)
-  gcrio_proxy = ctx.resource_list["functionConfig"]["params"]["gcrioProxy"]
+  gcrio_proxy = ctx.resource_list["functionConfig"]["params"]["gcr.io"]
   ensureProxy(ctx.resource_list["items"], gcrio_proxy)

@@ -15,3 +15,7 @@ in https://catalog.kpt.dev/search-replace/v0.2/?id=field-path-patterns to be abl
 
 It is possible to specify image `gcr.io/kpt-fn/starlark:v0.4.3` as `starlark:v0.4.3`, so changing proxy will require to add
 `gcr.io/kpt-fn/`
+
+## Desired Improvement #3
+
+Dynamic support of docker registries, e.g. `gchr.io`, `quay.io`, `k8s.gcr.io`
