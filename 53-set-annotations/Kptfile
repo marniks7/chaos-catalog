@@ -7,5 +7,5 @@ pipeline:
     - image: gcr.io/kpt-fn/set-annotations:v0.1.4
       selectors:
         - kind: PodChaos
-        - kind: PodChaos2
+        - kind: NetworkChaos
       configPath: set-annotation-local-config-true.yaml
