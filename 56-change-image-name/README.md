@@ -15,7 +15,7 @@ level.
 At the same time this might not be applicable for `Tekton` or `Argo Workflow`.
 Tekton option with specifying image as parameter: `image: $(params.image)`
 
-## Desired Improvement #2
+## Desired Improvement #2  (corner case)
 
 It is possible to specify image `gcr.io/kpt-fn/starlark:v0.4.3` as `starlark:v0.4.3`, so changing proxy will require to
 add
@@ -37,7 +37,9 @@ params:
 ```
 
 ## Desired Improvement #4
+
 In Tekton Task image can be specified in field `default`, where `name: image` value can be any
+
 ```
 - default: gcr.io/cloud-builders/kubectl@sha256:8ab94be8b2b4f3d117f02d868b39540fddd225447abf4014f7ba4765cb39f753
   description: Kubectl wrapper image
@@ -45,8 +47,14 @@ In Tekton Task image can be specified in field `default`, where `name: image` va
 ```
 
 Specifying in `PipelineRun` or in `Pipeline` (as above, `name: image` can have any name)
+
 ```
 params:
   - name: image
     value: gcr.io/cloud-builders/kubectl@sha256:8ab94be8b2b4f3d117f02d868b39540fddd225447abf4014f7ba4765cb39f753
 ```
+
+## Desired Improvement #5 (corner case)
+
+In case if image will be specified as: `kpt-fn/starlark:v0.4.3` it will be pulled from docker hub, result should be
+`dockerproxy.company.name/kpt-fn/starlark:v0.4.3`
