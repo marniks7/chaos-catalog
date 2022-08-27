@@ -1,6 +1,0 @@
-# Workaround in order to replace targets
-apiVersion: v1
-kind: Namespace
-metadata:
-  # name of the namespace where to deploy pipelines
-  name: tekton-namespace
