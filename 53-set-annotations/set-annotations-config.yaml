@@ -1,0 +1,10 @@
+apiVersion: fn.kpt.dev/v1alpha1
+kind: SetAnnotations
+metadata:
+  name: set-local-config-4-all-chaos-mesh-CRDs
+annotations:
+  config.kubernetes.io/local-config: "true"
+additionalAnnotationFields:
+  - kind: PodChaos
+    create: true
+    path: metadata/annotations
