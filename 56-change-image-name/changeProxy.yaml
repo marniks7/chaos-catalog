@@ -4,15 +4,14 @@ metadata:
   name: change-image-proxy
 params:
   gcrioProxy: proxy.company.com
-source: |
+source: |-
   def is_kpt_file(r):
     return r["kind"] == "Kptfile"
   def ensureProxy(resources, gcrioProxy):
     for resource in resources:
-      if !is_kpt_file(resource):
+      if not is_kpt_file(resource):
         return
       for m in resource["pipeline"]["mutators"]:
         m["image"] = m["image"].replace("gcr.io", gcrioProxy)
-      resources.append(pdb)
   gcrio_proxy = ctx.resource_list["functionConfig"]["params"]["gcrioProxy"]
   ensureProxy(ctx.resource_list["items"], gcrio_proxy)

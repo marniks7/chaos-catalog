@@ -1,7 +1,17 @@
-# Change part of docker image
+# Change part of docker image to proxy
 
 Goal: `change gcr.io/` to `proxy.company.com/`
 
-Result: **failed**
+Result: **passed**
 
-Reason: unclear how to do that without `Starlank`
+Details: used `Starlank`
+
+## Desired Improvement #1
+
+This `Starlank` [function](changeProxy.yaml) better to search as
+in https://catalog.kpt.dev/search-replace/v0.2/?id=field-path-patterns to be able to change image on any hierarchy level.
+
+## Desired Improvement #2
+
+It is possible to specify image `gcr.io/kpt-fn/starlark:v0.4.3` as `starlark:v0.4.3`, so changing proxy will require to add
+`gcr.io/kpt-fn/`
