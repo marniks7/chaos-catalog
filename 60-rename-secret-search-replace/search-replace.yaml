@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pipeline-run-set-default-status
+data:
+  by-value: kubeconfig-example
+  put-value: kubeconfig-example-XXXXXX
