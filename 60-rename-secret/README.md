@@ -1,44 +1,11 @@
-# Mount Secret
+# Rename Secret
 
-Goal: generate secret from file, basic way
+Goal: rename secret (change `metadata.name`) in Secret itself and in related file(s), like [pod.yaml](pod.yaml)
 
-Note: do NOT commit your secret if it is from real environment
+Result: **failed**
 
-Result: It works :)
+Reason: unclear how to identify secret in order to change `metadata.name` in that secret. (there is no option to identify by `filename`)
 
-1. Generate secret from current kubectl
-```bash
-# current kubeconfig
-kubectl config view --minify --raw > unsealed-kubeconfig.yaml
-# replace 0.0.0.0
-sed -i 's/0.0.0.0/kubernetes.default.svc/; s/6443/443/' unsealed-kubeconfig.yaml
-# create secret
-kubectl create secret generic kubeconfig-example --output=yaml --dry-run=client \
---from-file=kubeconfig=unsealed-kubeconfig.yaml \
-| tee unsealed-secret.yaml
-# remove kubeconfig from local filesystem
-rm -f unsealed-kubeconfig.yaml
-```
-2. Apply
-```
-kpt live init && kpt live apply
-```
-3. Check
-```
-kubectl logs example
-```
-4. Destroy
-```
-kpt live destroy
-```
-
-### Useful commands
-1. Generate common pod manifest
-```bash
-kubectl run example --image=busybox --restart=Never --dry-run=client --output=yaml -- sh -c "env && cat /etc/resolv.conf && wget -S https://kubernetes.default.svc:443" | tee pod-test.yaml
-```
-2. Testing
-```bash
-kubectl run example --image=busybox --restart=Never -it --rm -- sh -c "wget -S --timeout=5 https://kubernetes.default.svc:443"
-kubectl run example --image=bitnami/kubectl --restart=Never -it --rm -- get pods
-```
+## Another issue
+* In case if upstream rename secret or adds this secret to another file, how to modify it?
+* in case if volume is renamed?

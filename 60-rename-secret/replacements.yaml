@@ -9,13 +9,13 @@ replacements:
       kind: ConfigMap
       name: set-kubeconfig-secret-name
       fieldPath: data.value
-      targets:
-        - select:
-            kind: Secret
-          fieldPaths:
-            - metadata.name
-        - select:
-            kind: Pod
-            name: example
-          fieldPaths:
-            - spec.volumes.[name="kubeconfig"].secret.secretName
+    targets:
+      - select:
+          kind: Secret
+        fieldPaths:
+          - metadata.name
+      - select:
+          kind: Pod
+          name: example
+        fieldPaths:
+          - spec.volumes.[name=kubeconfig].secret.secretName
