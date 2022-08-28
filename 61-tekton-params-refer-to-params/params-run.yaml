@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: params-ref-params
+spec:
+  description: Apply pod-failure with ChaosMesh
+  params:
+    - description: where to apply chaos
+      name: namespace
+      type: string
+    - default: bash
+      name: image
+    - name: namespace2
+      type: string
+      default: $(params.namespace)
+  results:
+    - description: some result can be emitted if someone wants to.
+      name: output-result
+  steps:
+    - image: $(params.image)
+      name: kubectl
+      script: |-
+        #!/usr/bin/env bash
+        set -eou pipefail
+
+        echo "namespace: $(params.namespace)"
+        echo "namespace2: $(params.namespace2)"

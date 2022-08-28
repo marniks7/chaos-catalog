@@ -1,10 +1,10 @@
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
-  name: pod-kill
+  name: params-ref-params
 spec:
   params:
     - name: namespace
       value: kube-system
   taskRef:
-    name: chaosmesh-pod-kill
+    name: params-ref-params
