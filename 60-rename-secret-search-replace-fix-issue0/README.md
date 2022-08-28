@@ -2,14 +2,13 @@
 
 Goal: rename secret (change `metadata.name`) in Secret itself and in related file(s), like [pod.yaml](pod.yaml)
 
-Result: **failed**: 
+Result: **still failed**: 
 
 ## Issue#0 (main reason)
 
-Fragile:
+The previous issue#0 is fixed, but now we have another problem: we need 3 (!) files to support that renaming
 
-What if there will be field with the same value (just a coincidence)? for example, secret `nginx` and imagine how many
-fields might have the same values
+More over, user will need to set that in 3 (!) files, or we will need to make automation for that
 
 ## Issue#1
 

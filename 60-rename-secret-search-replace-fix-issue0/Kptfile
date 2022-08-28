@@ -8,3 +8,5 @@ pipeline:
       configPath: search-replace1.yaml
     - image: gcr.io/kpt-fn/search-replace:v0.2.0
       configPath: search-replace2.yaml
+    - image: gcr.io/kpt-fn/search-replace:v0.2.0
+      configPath: search-replace3.yaml
