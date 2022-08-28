@@ -1,0 +1,21 @@
+apiVersion: fn.kpt.dev/v1alpha1
+kind: ApplyReplacements
+metadata:
+  name: replacements-target-secret
+  annotations:
+    config.kubernetes.io/local-config: "true"
+replacements:
+  - source:
+      kind: ConfigMap
+      name: set-kubeconfig-secret-name
+      fieldPath: data.value
+    targets:
+      - select:
+          kind: Secret
+        fieldPaths:
+          - metadata.name
+      - select:
+          kind: Pod
+          name: example
+        fieldPaths:
+          - spec.volumes.[name=kubeconfig].secret.secretName
