@@ -1,4 +1,3 @@
-# Workaround in order to replace targets
 apiVersion: chaos.test.com/v1alpha1
 kind: TargetNamespace
 metadata:
