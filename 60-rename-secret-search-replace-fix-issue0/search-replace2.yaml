@@ -6,4 +6,5 @@ metadata:
     config.kubernetes.io/local-config: "true"
 data:
   by-value: kubeconfig-example
+  by-path: metadata.name
   put-value: kubeconfig-example-XXXXXX
