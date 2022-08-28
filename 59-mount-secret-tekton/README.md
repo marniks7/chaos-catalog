@@ -1,6 +1,6 @@
-# Mount Secret
+# Mount Secret inside Tekton TaskRun
 
-Goal: generate secret from file, basic way
+Goal: generate secret from file and mount to `Tekton` `TaskRun`
 
 Note: do NOT commit your secret if it is from real environment
 
@@ -25,20 +25,9 @@ kpt live init && kpt live apply
 ```
 3. Check
 ```
-kubectl logs example
+kubectl logs get-pods-pod
 ```
 4. Destroy
 ```
 kpt live destroy
-```
-
-### Useful commands
-1. Generate common pod manifest
-```bash
-kubectl run example --image=busybox --restart=Never --dry-run=client --output=yaml -- sh -c "env && cat /etc/resolv.conf && wget -S https://kubernetes.default.svc:443" | tee pod-test.yaml
-```
-2. Testing
-```bash
-kubectl run example --image=busybox --restart=Never -it --rm -- sh -c "wget -S --timeout=5 https://kubernetes.default.svc:443"
-kubectl run example --image=bitnami/kubectl --restart=Never -it --rm -- get pods
 ```

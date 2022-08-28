@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: get-pods
+spec:
+  workspaces:
+    - name: kubeconfig-dir
+      secret:
+        secretName: kubeconfig-example
+  params:
+    - name: script
+      value: |
+        kubectl get pods -n kube-system
+  taskRef:
+    name: kubernetes-actions
