@@ -2,6 +2,8 @@
 
 Goal: rename secret (change `metadata.name`) in Secret itself and in related file(s), like [pod.yaml](pod.yaml)
 
+Function: https://catalog.kpt.dev/apply-replacements/v0.1/
+
 Result: **failed**
 
 ## Issue#0 (main reason)
