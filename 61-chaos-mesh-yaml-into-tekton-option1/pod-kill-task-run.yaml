@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: pod-kill
+spec:
+  workspaces:
+    - name: kubeconfig-dir
+      secret:
+        secretName: kubeconfig-example
+  params:
+    - name: namespace
+      value: kube-system
+  taskRef:
+    name: chaosmesh-pod-kill
