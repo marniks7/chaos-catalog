@@ -27,29 +27,28 @@ spec:
         [[ -f $(workspaces.kubeconfig-dir.path)/kubeconfig ]] && \
         export KUBECONFIG=$(workspaces.kubeconfig-dir.path)/kubeconfig
 
-        # TBD include pod-kill.yaml
         cm=$(cat <<EOF
         kind: PodChaos
         apiVersion: chaos-mesh.org/v1alpha1
         metadata:
           namespace: $(params.namespace)
-          generateName: pod-failure-
-          annotations:
-            config.kubernetes.io/local-config: "true"
+          generateName: pod-kill-
         spec:
           selector:
             namespaces:
               - $(params.namespace)
             labelSelectors:
-              app.kubernetes.io/component: master
-              app.kubernetes.io/name: redis
+              k8s-app: metrics-server
           mode: one
           action: pod-kill
           gracePeriod: 0
         EOF
         )
         echo $cm
+        kubectl get pods -n kube-system
         echo "${cm}" | kubectl apply -f -
+        sleep 5
+        kubectl get pods -n kube-system
   workspaces:
     - name: manifest-dir
       optional: true
