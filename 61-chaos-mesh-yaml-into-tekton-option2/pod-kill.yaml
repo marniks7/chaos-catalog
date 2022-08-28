@@ -1,0 +1,17 @@
+kind: PodChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: $(params.namespace)
+  name: pod-kill
+  annotations:
+    config.kubernetes.io/local-config: "true"
+spec:
+  selector:
+    namespaces:
+      - $(params.namespace)
+    labelSelectors:
+      app.kubernetes.io/component: master
+      app.kubernetes.io/name: redis
+  mode: one
+  action: pod-kill
+  gracePeriod: 0
