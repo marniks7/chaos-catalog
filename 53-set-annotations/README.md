@@ -4,7 +4,7 @@ Goal: set annotations to Chaos Mesh only resources
 
 Result: **passed**
 
-## Desired Improvement
+## Desired Improvement#1
 
 There are a lot of different CRDs in ChaosMesh and ChaosMesh team continue to add new, and I would prefer to
 apply annotations to `group=chaos-mesh.org`
@@ -20,4 +20,11 @@ selectors:
 configPath: set-annotation-local-config-true.yaml
 ```
 
+## Desired Improvement#2
 
+All configuration annotations should be possible to remove from on-the-fly before including into another file
+
+```
+annotations:
+    config.kubernetes.io/local-config: "true"
+```
