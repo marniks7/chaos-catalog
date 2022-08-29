@@ -1,0 +1,18 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: 54-kpt-pkg-get-with-krmignore
+upstream:
+  type: git
+  git:
+    repo: https://github.com/marniks7/chaos-catalog
+    directory: /54-kpt-pkg-get-with-krmignore
+    ref: master
+  updateStrategy: resource-merge
+upstreamLock:
+  type: git
+  git:
+    repo: https://github.com/marniks7/chaos-catalog
+    directory: /54-kpt-pkg-get-with-krmignore
+    ref: master
+    commit: 0851aad860fcee7ba0ed7b6ce78ed7f1e8bbf330
