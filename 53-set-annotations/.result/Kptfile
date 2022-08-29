@@ -1,0 +1,11 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: example
+pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/set-annotations:v0.1.4
+      selectors:
+        - kind: PodChaos
+        - kind: NetworkChaos
+      configPath: set-annotation-local-config-true.yaml
