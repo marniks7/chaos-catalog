@@ -1,0 +1,8 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: example
+pipeline:
+  mutators:
+    - image: proxy.company.com/kpt-fn/starlark:v0.4.3
+      configPath: changeProxy.yaml
