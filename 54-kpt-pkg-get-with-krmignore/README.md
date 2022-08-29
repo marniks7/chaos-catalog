@@ -4,7 +4,7 @@ Goal: exclude certain files from `kpt pkg get` with [.krmignore](.krmignore), so
 
 Result: **failed**
 
-Reason: .krmignore doesn't help with that. no idea if it should
+Reason: .krmignore doesn't help with that. no idea if it should, see [.result](.result)
 
 Command:
 ```
