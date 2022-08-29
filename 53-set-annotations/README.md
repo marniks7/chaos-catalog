@@ -4,7 +4,7 @@ Goal: set annotations to Chaos Mesh only resources
 
 Result: **passed**, see [.result](.result)
 
-Command: `kpt fn source . | kpt fn sink .result | kpt fn render .result`
+Command: `kpt fn source . | kpt fn sink .result && kpt fn render .result`
 
 ## Desired Improvement#1
 

@@ -4,7 +4,7 @@ Goal: change `gcr.io/` to `proxy.company.com/`
 
 Result: **passed**, see [.result](.result)
 
-Command: `kpt fn source . | kpt fn sink .result | kpt fn render .result`
+Command: `kpt fn source . | kpt fn sink .result && kpt fn render .result`
 
 Details: used `Starlank`
 
