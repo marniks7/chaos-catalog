@@ -7,9 +7,11 @@ Reason:
 1. source url is specified
 2. very easy to upgrade to newer version
 
-Result: **failed**
+Result: **failed** for `kpt`, **passed** for `kustomize`, see [.result](.result)
 
 Reason: `kpt` doesn't have such option
+
+Command: `mkdir -p .result && kubectl kustomize -o .result`
 
 ## Alternative
 
