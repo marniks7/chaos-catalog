@@ -1,0 +1,6 @@
+apiVersion: chaos.test.com/v1alpha1
+kind: TargetNamespace
+metadata:
+  name: chaos-namespace
+  annotations:
+    config.kubernetes.io/local-config: "true"
