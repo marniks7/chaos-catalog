@@ -1,0 +1,8 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: update-ksops-secrets
+pipeline:
+  mutators:
+    - image: ghcr.io/neutronth/kpt-update-ksops-secrets:0.7
+      configPath: update-ksops-secrets.yaml
