@@ -3,9 +3,9 @@
 https://github.com/FiloSottile/age
 
 ## Simple case
-1. encrypt: `age -p unsealed-secret.yaml > .result/sealed-secret.yaml.age`
+1. encrypt: `age -o .result/sealed-secret.yaml.age -p unsealed-secret.yaml`
    * passphrase: (! should be secured ! published only as an example) `firm-squeeze-annual-noise-cute-practice-wise-one-summer-document` 
-2. decrypt: `age -d .result/sealed-secret.yaml.age > unsealed-secret.yaml`
+2. decrypt: `age -o unsealed-secret.yaml -d .result/sealed-secret.yaml.age`
    * passphrase: the same as above
 
 ## Recipient case
