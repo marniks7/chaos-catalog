@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: test-pipeline-3
+  namespace: tekton-namespace
+spec:
+  pipelineSpec:
+    tasks:
+      - name: task1
+        taskSpec:
+          steps:
+            - name: echo
+              image: ubuntu
+              script: |
+                #!/usr/bin/env bash
+                echo "Hello World!"
+  status: Cancelled

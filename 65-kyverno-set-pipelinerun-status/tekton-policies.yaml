@@ -1,0 +1,17 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: tekton-mutation-policies
+  namespace: tekton-namespace
+spec:
+  rules:
+    - name: set-default-status
+      match:
+        any:
+          - resources:
+              kinds:
+                - PipelineRun
+      mutate:
+        patchStrategicMerge:
+          spec:
+            status: PipelineRunPending
