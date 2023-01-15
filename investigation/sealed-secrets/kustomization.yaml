@@ -1,0 +1,2 @@
+generators:
+  - .krm/sealed-secrets.yaml

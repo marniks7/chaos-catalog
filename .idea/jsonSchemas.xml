@@ -30,6 +30,9 @@
                   <Item>
                     <option name="path" value="chaos-catalog/10-tasks/kustomization.yaml" />
                   </Item>
+                  <Item>
+                    <option name="path" value="runner/kustomization.yaml" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

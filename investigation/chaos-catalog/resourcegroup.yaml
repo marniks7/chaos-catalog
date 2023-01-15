@@ -1,0 +1,7 @@
+apiVersion: kpt.dev/v1alpha1
+kind: ResourceGroup
+metadata:
+  name: inventory-82898437
+  namespace: tekton-namespace
+  labels:
+    cli-utils.sigs.k8s.io/inventory-id: 0ed30ef46ba98e256841c0909c043e48e41b5cc9-1663196628772971970

@@ -48,3 +48,4 @@ spec:
           workspace: kubeconfig-dir
   workspaces:
     - name: kubeconfig-dir
+      description: kubeconfig secret
