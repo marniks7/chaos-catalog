@@ -1,0 +1,14 @@
+kind: PodChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+    namespace: tekton-chaos-mesh
+    generateName: pod-kill-echo-server-
+spec:
+    selector:
+        namespaces:
+            - app
+        labelSelectors:
+            app: echo-server
+    mode: one
+    action: pod-kill
+    gracePeriod: 0

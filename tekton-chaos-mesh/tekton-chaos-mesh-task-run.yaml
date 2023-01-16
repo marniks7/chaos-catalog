@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: pod-kill-
+  namespace: tekton-chaos-mesh
+spec:
+  serviceAccountName: tekton-chaos-mesh
+  params:
+    - name: experiment-yaml
+      value: |
+            kind: PodChaos
+            apiVersion: chaos-mesh.org/v1alpha1
+            metadata:
+              namespace: tekton-chaos-mesh
+              generateName: pod-kill-echo-server-
+            spec:
+              selector:
+                namespaces:
+                  - app
+                labelSelectors:
+                  app: echo-server
+              mode: all
+              action: pod-kill
+              gracePeriod: 0
+  taskRef:
+    name: chaos-mesh

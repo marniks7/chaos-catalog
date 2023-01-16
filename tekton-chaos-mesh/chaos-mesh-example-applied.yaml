@@ -1,0 +1,51 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  creationTimestamp: "2023-01-16T02:36:03Z"
+  finalizers:
+  - chaos-mesh/records
+  generateName: pod-kill-echo-server-
+  generation: 5
+  name: pod-kill-echo-server-fxm7l
+  namespace: tekton-chaos-mesh
+  resourceVersion: "40219"
+  uid: 9b4cb53e-98bb-4210-a42a-ac9940438301
+spec:
+  action: pod-kill
+  mode: all
+  selector:
+    labelSelectors:
+      app: echo-server
+    namespaces:
+    - app
+status:
+  conditions:
+  - status: "True"
+    type: Selected
+  - status: "True"
+    type: AllInjected
+  - status: "False"
+    type: AllRecovered
+  - status: "False"
+    type: Paused
+  experiment:
+    containerRecords:
+    - events:
+      - operation: Apply
+        timestamp: "2023-01-16T02:36:03Z"
+        type: Succeeded
+      id: app/echo-deployment-67c68d8977-jl5fh
+      injectedCount: 1
+      phase: Injected
+      recoveredCount: 0
+      selectorKey: .
+    - events:
+      - operation: Apply
+        timestamp: "2023-01-16T02:36:03Z"
+        type: Succeeded
+      id: app/echo-deployment-67c68d8977-fntbb
+      injectedCount: 1
+      phase: Injected
+      recoveredCount: 0
+      selectorKey: .
+    desiredPhase: Run

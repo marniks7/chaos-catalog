@@ -48,12 +48,16 @@ kind export kubeconfig --name runner
 # Chaos Mesh
 # https://chaos-mesh.org/docs/production-installation-using-helm/
 # https://github.com/chaos-mesh/chaos-mesh/tree/master/helm/chaos-mesh
+
+# dashboard.service.type=ClusterIP otherwise it created NodePort by default
+# replicaCount by default 3. save resources.
 helm upgrade --install chaos-mesh chaos-mesh \
   --repo https://charts.chaos-mesh.org \
   --namespace chaos-mesh --create-namespace \
-  --version 2.5.1 --set controllerManager.replicaCount=1 \
-  # otherwise it created NodePort by default
+  --version 2.5.1 \
+  --set controllerManager.replicaCount=1 \
   --set dashboard.service.type=ClusterIP
+
 # Tekton Pipelines
 # https://tekton.dev/docs/pipelines/install/
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
@@ -89,6 +93,9 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 #helm upgrade --install ingress-nginx ingress-nginx \
 #  --repo https://kubernetes.github.io/ingress-nginx \
 #  --namespace ingress-nginx --create-namespace
+
+# App
+kubectl apply -f app-http-echo.yaml
 
 # Ingress
 CHAOS_MESH_INGRESS_YAML=$(cat <<EOF

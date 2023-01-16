@@ -1,0 +1,72 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+    name: chaos-mesh
+    namespace: tekton-chaos-mesh
+spec:
+    description: Apply any Chaos Mesh experiment
+    params:
+        - name: experiment-yaml
+          description: Chaos Mesh experiment yaml
+          type: string
+        - name: image
+          description: Kubectl wrapper image
+          default: bitnami/kubectl
+          type: string
+        - name: image-yq
+          description: YQ Wrapper image
+          default: mikefarah/yq
+          type: string
+        - name: experiment-selected-wait-timeout
+          description: How long to wait for chaos experiment to find targets (become Selected)
+          default: 30s
+    results:
+        - name: output-result
+          description: some result can be emitted if someone wants to.
+        - name: namespace
+        - name: name
+        - name: type
+    steps:
+        - name: parse
+          image: $(params.image-yq)
+          env:
+              - name: CHAOS_MESH_EXPERIMENT
+                value: $(params.experiment-yaml)
+          script: |
+            echo "${CHAOS_MESH_EXPERIMENT}" | yq '.metadata.namespace'
+            echo "${CHAOS_MESH_EXPERIMENT}" | yq '.metadata.namespace' > $(results.namespace.path)
+        - name: apply
+          image: $(params.image)
+          env:
+              - name: CHAOS_MESH_EXPERIMENT
+                value: $(params.experiment-yaml)
+              - name: CHAOS_MESH_SELECTED_WAIT_TIME
+                value: $(params.experiment-selected-wait-timeout)
+
+          script: |
+            #!/usr/bin/env bash
+            set -e
+            [[ "$(workspaces.kubeconfig-dir.bound)" == "true" ]] && \
+            [[ -f $(workspaces.kubeconfig-dir.path)/kubeconfig ]] && \
+            export KUBECONFIG=$(workspaces.kubeconfig-dir.path)/kubeconfig
+            echo "${CHAOS_MESH_EXPERIMENT}"
+            namespace="$(cat $(results.namespace.path))"
+            result=$(echo "${CHAOS_MESH_EXPERIMENT}" | kubectl create -f -)
+            echo "${result}"
+            typeName=$(echo "${result}" | awk '{ print $1 }')
+            name=${typeName#*\/}
+            type=${typeName%\/*}
+            echo "${name}" > $(results.name.path)
+            echo "${type}" > $(results.type.path)
+            kubectl wait --for=condition=Selected --timeout=${CHAOS_MESH_SELECTED_WAIT_TIME} --namespace ${namespace} ${typeName}
+            kubectl get ${typeName} --namespace ${namespace} -o yaml
+        - name: targets
+          image: marniks7/env
+          script: |
+            type=$(cat $(results.type.path))
+            name=$(cat $(results.name.path))
+            namespace=$(cat $(results.namespace.path))
+            kubectl get ${type} ${name} --namespace ${namespace} -o yaml | yq '.status.experiment.containerRecords[].id'
+    workspaces:
+    - name: kubeconfig-dir
+      optional: true
