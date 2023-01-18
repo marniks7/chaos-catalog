@@ -1,5 +1,5 @@
-kind: PodChaos
 apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
 metadata:
     namespace: tekton-chaos-mesh
     generateName: pod-kill-echo-server-

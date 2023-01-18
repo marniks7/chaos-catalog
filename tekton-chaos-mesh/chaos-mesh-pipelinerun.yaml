@@ -1,0 +1,64 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: pod-kill-
+  namespace: tekton-chaos-mesh
+spec:
+  serviceAccountName: tekton-chaos-mesh
+  pipelineSpec:
+    tasks:
+      - name: apply
+        params:
+          - name: experiment-yaml
+            value: |
+              kind: PodChaos
+              apiVersion: chaos-mesh.org/v1alpha1
+              metadata:
+                namespace: tekton-chaos-mesh
+                generateName: pod-kill-echo-server-
+              spec:
+                selector:
+                  namespaces:
+                    - app
+                  labelSelectors:
+                    app: echo-server
+                mode: all
+                action: pod-kill
+                gracePeriod: 0
+        taskRef:
+          name: chaos-mesh
+      - name: validate
+        params:
+          - name: namespace
+            value: $(tasks.apply.results.namespace)
+          - name: name
+            value: $(tasks.apply.results.name)
+          - name: type
+            value: $(tasks.apply.results.type)
+        taskSpec:
+          steps:
+            - name: validate
+              image: marniks7/env
+              script: |
+                #!/bin/bash
+                set -e
+                echo "namespace: $(params.namespace)"
+                echo "name: $(params.name)"
+                echo "type: $(params.type)"
+                if [ "$(params.namespace)" != "tekton-chaos-mesh" ]; then
+                  echo "Expected namespace: tekton-chaos-mesh, actual $(params.namespace)"
+                  exit 1
+                fi
+                if [ -z "$(params.name)" ]; then
+                  echo "Expected name: non empty name, actual $(params.name)"
+                  exit 1
+                fi
+                 if [[ "$(params.name)" != *"pod-kill-"* ]]; then
+                  echo "Expected name: contains pod-kill-, actual $(params.name)"
+                  exit 1
+                fi
+                if [ "$(params.type)" != "podchaos.chaos-mesh.org" ]; then
+                  echo "Expected type: podchaos.chaos-mesh.org, actual $(params.type)"
+                  exit 1
+                fi
+                kubectl get $(params.type) $(params.name) --namespace $(params.namespace)

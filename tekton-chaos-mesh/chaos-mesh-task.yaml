@@ -34,7 +34,8 @@ spec:
                 value: $(params.experiment-yaml)
           script: |
             echo "${CHAOS_MESH_EXPERIMENT}" | yq '.metadata.namespace'
-            echo "${CHAOS_MESH_EXPERIMENT}" | yq '.metadata.namespace' > $(results.namespace.path)
+            namespace=$(echo -n "${CHAOS_MESH_EXPERIMENT}" | yq -r '.metadata.namespace')
+            echo -n $namespace > $(results.namespace.path)
         - name: apply
           image: $(params.image)
           env:
@@ -56,8 +57,8 @@ spec:
             typeName=$(echo "${result}" | awk '{ print $1 }')
             name=${typeName#*\/}
             type=${typeName%\/*}
-            echo "${name}" > $(results.name.path)
-            echo "${type}" > $(results.type.path)
+            echo -n "${name}" > $(results.name.path)
+            echo -n "${type}" > $(results.type.path)
             kubectl wait --for=condition=Selected --timeout=${CHAOS_MESH_SELECTED_WAIT_TIME} --namespace ${namespace} ${typeName}
             kubectl get ${typeName} --namespace ${namespace} -o yaml
         - name: targets
