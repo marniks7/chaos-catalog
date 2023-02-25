@@ -1,0 +1,41 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: pod-kill-
+  namespace: tekton-chaos-mesh
+spec:
+  serviceAccountName: tekton-chaos-mesh
+  pipelineSpec:
+    tasks:
+      - name: apply
+        params:
+          - name: experiment-yaml
+            value: |
+              kind: PodChaos
+              apiVersion: chaos-mesh.org/v1alpha1
+              metadata:
+                namespace: tekton-chaos-mesh
+                generateName: pod-kill-echo-server-
+              spec:
+                selector:
+                  namespaces:
+                    - app
+                  labelSelectors:
+                    app: echo-server
+                mode: all
+                action: pod-kill
+                gracePeriod: 0
+        taskRef:
+          name: chaos-mesh
+      - name: chaos-mesh-recovered
+        params:
+          - name: namespace
+            value: $(tasks.apply.results.namespace)
+          - name: name
+            value: $(tasks.apply.results.name)
+          - name: type
+            value: $(tasks.apply.results.type)
+          - name: timeout
+            value: 35s
+        taskRef:
+          name: chaos-mesh-wait-recovered

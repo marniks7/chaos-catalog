@@ -51,6 +51,9 @@ kind export kubeconfig --name runner
 
 # dashboard.service.type=ClusterIP otherwise it created NodePort by default
 # replicaCount by default 3. save resources.
+helm repo add chaos-mesh https://charts.chaos-mesh.org || true
+#helm search repo chaos-mesh || true
+# helm repo update
 helm upgrade --install chaos-mesh chaos-mesh \
   --repo https://charts.chaos-mesh.org \
   --namespace chaos-mesh --create-namespace \
@@ -60,25 +63,25 @@ helm upgrade --install chaos-mesh chaos-mesh \
 
 # Tekton Pipelines
 # https://tekton.dev/docs/pipelines/install/
-kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+kubectl apply --filename https://github.com/tektoncd/pipeline/releases/download/v0.45.0/release.yaml
 # Tekton Dashboard
 # https://tekton.dev/docs/dashboard/install/
-kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/tekton-dashboard-release.yaml
+kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.32.0/release-full.yaml
 # Tekton Results
 # https://github.com/tektoncd/results/blob/main/docs/install.md
 kubectl create secret generic tekton-results-postgres --namespace="tekton-pipelines" --from-literal=POSTGRES_USER=postgres --from-literal=POSTGRES_PASSWORD=$(openssl rand -base64 20) || true
-apk add openssl
+#apk add openssl
 openssl req -x509 \
--newkey rsa:4096 \
--keyout key.pem \
--out cert.pem \
--days 365 \
--nodes \
--subj "/CN=tekton-results-api-service.tekton-pipelines.svc.cluster.local" \
--addext "subjectAltName = DNS:tekton-results-api-service.tekton-pipelines.svc.cluster.local"
+  -newkey rsa:4096 \
+  -keyout key.pem \
+  -out cert.pem \
+  -days 365 \
+  -nodes \
+  -subj "/CN=tekton-results-api-service.tekton-pipelines.svc.cluster.local" \
+  -addext "subjectAltName = DNS:tekton-results-api-service.tekton-pipelines.svc.cluster.local"
 kubectl create secret tls -n tekton-pipelines tekton-results-tls \
---cert=cert.pem \
---key=key.pem || true
+  --cert=cert.pem \
+  --key=key.pem || true
 kubectl apply -f https://storage.googleapis.com/tekton-releases/results/previous/v0.3.0/release.yaml
 # Keycloak
 # https://artifacthub.io/packages/helm/bitnami/keycloak
@@ -95,10 +98,11 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 #  --namespace ingress-nginx --create-namespace
 
 # App
-kubectl apply -f app-http-echo.yaml
+kubectl apply -f runner/app-http-echo.yaml
 
 # Ingress
-CHAOS_MESH_INGRESS_YAML=$(cat <<EOF
+CHAOS_MESH_INGRESS_YAML=$(
+  cat <<EOF
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -121,7 +125,8 @@ EOF
 )
 echo "${CHAOS_MESH_INGRESS_YAML}" | kubectl apply -f -
 
-TEKTON_INGRESS_YAML=$(cat <<EOF
+TEKTON_INGRESS_YAML=$(
+  cat <<EOF
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -142,3 +147,9 @@ spec:
 EOF
 )
 echo "${TEKTON_INGRESS_YAML}" | kubectl apply -f -
+
+echo "Results"
+echo "Chaos Mesh Dashboard: http://chaos-mesh.127.0.0.1.nip.io"
+echo "Tekton Dashboard: http://tekton-dashboard.127.0.0.1.nip.io"
+echo "Tekton Dashboard: kubectl port-forward -n tekton-pipelines service/tekton-dashboard 9097:9097"
+echo "Tekton Dashboard: http://localhost:9097"

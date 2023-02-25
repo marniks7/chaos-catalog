@@ -1,0 +1,46 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+    name: chaos-mesh-wait-recovered
+    namespace: tekton-chaos-mesh
+spec:
+    description: Wait for Chaos Mesh experiment to finish
+    params:
+        - name: namespace
+          description: Chaos Mesh experiment namespace
+          type: string
+        - name: type
+          description: Chaos Mesh experiment type
+          type: string
+        - name: name
+          description: Chaos Mesh experiment name
+          type: string
+        - name: image
+          description: Kubectl wrapper image
+          default: bitnami/kubectl
+          type: string
+        - name: timeout
+          description: How long to wait for chaos experiment to become recovered
+          default: 30s
+    steps:
+        - name: wait
+          image: $(params.image)
+          env:
+              - name: NAMESPACE
+                value: $(params.namespace)
+              - name: TYPE
+                value: $(params.type)
+              - name: NAME
+                value: $(params.name)
+              - name: TIMEOUT
+                value: $(params.timeout)
+          script: |
+            #!/usr/bin/env bash
+            set -e
+            [[ "$(workspaces.kubeconfig-dir.bound)" == "true" ]] && \
+            [[ -f $(workspaces.kubeconfig-dir.path)/kubeconfig ]] && \
+            export KUBECONFIG=$(workspaces.kubeconfig-dir.path)/kubeconfig
+            kubectl wait --for=condition=AllRecovered --timeout=${TIMEOUT} --namespace ${NAMESPACE} ${TYPE} ${NAME}
+    workspaces:
+        - name: kubeconfig-dir
+          optional: true
