@@ -64,6 +64,8 @@ helm upgrade --install chaos-mesh chaos-mesh \
 # Tekton Pipelines
 # https://tekton.dev/docs/pipelines/install/
 kubectl apply --filename https://github.com/tektoncd/pipeline/releases/download/v0.45.0/release.yaml
+## Tekton Config
+kubectl apply --filename runner/feature-flags.yaml
 # Tekton Dashboard
 # https://tekton.dev/docs/dashboard/install/
 kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.32.0/release-full.yaml
@@ -99,6 +101,12 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 # App
 kubectl apply -f runner/app-http-echo.yaml
+
+# Wait for ingress controller
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=90s
 
 # Ingress
 CHAOS_MESH_INGRESS_YAML=$(

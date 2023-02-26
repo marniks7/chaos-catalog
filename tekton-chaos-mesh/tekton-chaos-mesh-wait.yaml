@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-    name: chaos-mesh-wait-recovered
+    name: chaos-mesh-wait-applied
     namespace: tekton-chaos-mesh
 spec:
     description: Wait for Chaos Mesh experiment to finish
@@ -16,8 +16,8 @@ spec:
           description: Chaos Mesh experiment name
           type: string
         - name: image
-          description: Kubectl wrapper image
-          default: bitnami/kubectl
+          description: Used image, includes kubectl and yq
+          default: marniks7/env
           type: string
         - name: timeout
           description: How long to wait for chaos experiment to become recovered
@@ -40,7 +40,23 @@ spec:
             [[ "$(workspaces.kubeconfig-dir.bound)" == "true" ]] && \
             [[ -f $(workspaces.kubeconfig-dir.path)/kubeconfig ]] && \
             export KUBECONFIG=$(workspaces.kubeconfig-dir.path)/kubeconfig
-            kubectl wait --for=condition=AllRecovered --timeout=${TIMEOUT} --namespace ${NAMESPACE} ${TYPE} ${NAME}
+            kubectl get ${TYPE} ${NAME} --namespace ${NAMESPACE} -o yaml
+            action=$(kubectl get ${TYPE} ${NAME} --namespace ${NAMESPACE} -o yaml | yq '.spec.action')
+            echo "Action: ${action}"
+            readarray targets < <(kubectl get ${TYPE} ${NAME} --namespace ${NAMESPACE} -o yaml | yq '.status.experiment.containerRecords[].id')
+            echo "Targets: ${targets[@]}"
+            if [[ "${action}" == "pod-kill" ]]; then
+              for i in "${targets[@]}"
+              do
+                namespaceName=$(echo "${i}" | awk '{ print $1 }')
+                podNamespace=${namespaceName%\/*}
+                podName=${namespaceName#*\/}
+                # TODO timeout should be total for everything
+                kubectl wait --for=delete --namespace ${podNamespace} pod ${podName} --timeout=${TIMEOUT}
+              done
+            else
+              kubectl wait --for=condition=AllInjected --timeout=${TIMEOUT} --namespace ${NAMESPACE} ${TYPE} ${NAME}
+            fi
     workspaces:
         - name: kubeconfig-dir
           optional: true

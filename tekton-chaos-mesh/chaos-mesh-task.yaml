@@ -17,15 +17,18 @@ spec:
           description: YQ Wrapper image
           default: mikefarah/yq
           type: string
+        # TODO, do we need to wait for that?
         - name: experiment-selected-wait-timeout
           description: How long to wait for chaos experiment to find targets (become Selected)
-          default: 30s
+          default: 120s
     results:
         - name: output-result
           description: some result can be emitted if someone wants to.
         - name: namespace
         - name: name
         - name: type
+#        - name: targets
+#          type: array
     steps:
         - name: parse
           image: $(params.image-yq)
@@ -33,9 +36,8 @@ spec:
               - name: CHAOS_MESH_EXPERIMENT
                 value: $(params.experiment-yaml)
           script: |
-            echo "${CHAOS_MESH_EXPERIMENT}" | yq '.metadata.namespace'
-            namespace=$(echo -n "${CHAOS_MESH_EXPERIMENT}" | yq -r '.metadata.namespace')
-            echo -n $namespace > $(results.namespace.path)
+            echo -n "Namespace: "
+            echo -n "${CHAOS_MESH_EXPERIMENT}" | yq -r '.metadata.namespace' | tee $(results.namespace.path)
         - name: apply
           image: $(params.image)
           env:
@@ -43,31 +45,41 @@ spec:
                 value: $(params.experiment-yaml)
               - name: CHAOS_MESH_SELECTED_WAIT_TIME
                 value: $(params.experiment-selected-wait-timeout)
-
           script: |
             #!/usr/bin/env bash
             set -e
             [[ "$(workspaces.kubeconfig-dir.bound)" == "true" ]] && \
             [[ -f $(workspaces.kubeconfig-dir.path)/kubeconfig ]] && \
             export KUBECONFIG=$(workspaces.kubeconfig-dir.path)/kubeconfig
+            echo "Chaos Mesh Experiment YAML:"
             echo "${CHAOS_MESH_EXPERIMENT}"
             namespace="$(cat $(results.namespace.path))"
+            # TODO it is more reliable to generate name first and store it to make sure chaos is created only once
             result=$(echo "${CHAOS_MESH_EXPERIMENT}" | kubectl create -f -)
+            echo "Applied Result:"
             echo "${result}"
             typeName=$(echo "${result}" | awk '{ print $1 }')
             name=${typeName#*\/}
             type=${typeName%\/*}
-            echo -n "${name}" > $(results.name.path)
-            echo -n "${type}" > $(results.type.path)
+            echo -n "Chaos Experiment Name: "
+            echo -n "${name}" | tee $(results.name.path)
+            echo -n "K8s Resource Type: "
+            echo -n "${type}" | tee $(results.type.path)
             kubectl wait --for=condition=Selected --timeout=${CHAOS_MESH_SELECTED_WAIT_TIME} --namespace ${namespace} ${typeName}
             kubectl get ${typeName} --namespace ${namespace} -o yaml
-        - name: targets
-          image: marniks7/env
-          script: |
-            type=$(cat $(results.type.path))
-            name=$(cat $(results.name.path))
-            namespace=$(cat $(results.namespace.path))
-            kubectl get ${type} ${name} --namespace ${namespace} -o yaml | yq '.status.experiment.containerRecords[].id'
+#        - name: targets
+#          image: marniks7/env
+#          script: |
+#            #!/usr/bin/env bash
+#            set -e
+#            type=$(cat $(results.type.path))
+#            name=$(cat $(results.name.path))
+#            namespace=$(cat $(results.namespace.path))
+#            readarray targets < <(kubectl get ${type} ${name} --namespace ${namespace} -o yaml | yq '.status.experiment.containerRecords[].id')
+#            echo -n "targets2: ${targets[@]}"
+#            echo -n "target0: ${targets[0]}"
+#            echo -n "target1: ${targets[1]}"
+#            # echo -n "${targets[@]}" | tee $(results.targets.path)
     workspaces:
     - name: kubeconfig-dir
       optional: true

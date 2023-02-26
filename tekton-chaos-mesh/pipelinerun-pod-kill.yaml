@@ -27,7 +27,7 @@ spec:
                 gracePeriod: 0
         taskRef:
           name: chaos-mesh
-      - name: chaos-mesh-recovered
+      - name: chaos-mesh-applied
         params:
           - name: namespace
             value: $(tasks.apply.results.namespace)
@@ -38,4 +38,4 @@ spec:
           - name: timeout
             value: 35s
         taskRef:
-          name: chaos-mesh-wait-recovered
+          name: chaos-mesh-wait-applied
