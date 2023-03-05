@@ -66,7 +66,7 @@ spec:
             echo -n "K8s Resource Type: "
             echo -n "${type}" | tee $(results.type.path)
             kubectl wait --for=condition=Selected --timeout=${CHAOS_MESH_SELECTED_WAIT_TIME} --namespace ${namespace} ${typeName}
-            kubectl get ${typeName} --namespace ${namespace} -o yaml
+            #kubectl get ${typeName} --namespace ${namespace} -o yaml
 #        - name: targets
 #          image: marniks7/env
 #          script: |

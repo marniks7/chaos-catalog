@@ -1,0 +1,69 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: pod-kill-no-pods-
+  namespace: tekton-chaos-mesh
+spec:
+  serviceAccountName: tekton-chaos-mesh
+  pipelineSpec:
+    tasks:
+      - name: apply
+        params:
+          - name: experiment-yaml
+            value: |
+              kind: PodChaos
+              apiVersion: chaos-mesh.org/v1alpha1
+              metadata:
+                namespace: tekton-chaos-mesh
+                generateName: pod-kill-echo-server-
+              spec:
+                selector:
+                  namespaces:
+                    - app
+                  labelSelectors:
+                    app: no-pods
+                mode: all
+                action: pod-kill
+                gracePeriod: 0
+        taskRef:
+          name: chaos-mesh
+    finally:
+      - name: validate
+        params:
+          - name: namespace
+            value: $(tasks.apply.results.namespace)
+          - name: name
+            value: $(tasks.apply.results.name)
+          - name: type
+            value: $(tasks.apply.results.type)
+          - name: timeout
+            value: 35s
+        taskSpec:
+          steps:
+            - name: validate
+              image: marniks7/env
+              env:
+                - name: NAMESPACE
+                  value: $(params.namespace)
+                - name: TYPE
+                  value: $(params.type)
+                - name: NAME
+                  value: $(params.name)
+                - name: TIMEOUT
+                  value: $(params.timeout)
+              script: |
+                #!/usr/bin/env bash
+                set -e
+                [[ "$(workspaces.kubeconfig-dir.bound)" == "true" ]] && \
+                [[ -f $(workspaces.kubeconfig-dir.path)/kubeconfig ]] && \
+                export KUBECONFIG=$(workspaces.kubeconfig-dir.path)/kubeconfig
+                kubectl get ${TYPE} ${NAME} --namespace ${NAMESPACE} -o yaml
+                kubectl wait --for=condition=AllInjected --timeout=${TIMEOUT} --namespace ${NAMESPACE} ${TYPE} ${NAME}
+                readarray targets < <(kubectl get ${TYPE} ${NAME} --namespace ${NAMESPACE} -o yaml | yq '.status.experiment.containerRecords[].id')
+                if [[ ${#targets[@]} != 0 ]]; then
+                  echo "Expected 0 targets, got ${#targets[@]}. List of targets ${targets[@]}"
+                  exit 1
+                fi
+          workspaces:
+            - name: kubeconfig-dir
+              optional: true

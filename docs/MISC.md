@@ -29,3 +29,6 @@ There are few options where to specify chaos mesh yaml(s).
 
 1. YAML as user parameter in PipelineRun
 2. YAML in Task with some params to specify by user
+
+# Feature: Execute on any engine
+With minimum rework, e.g. on Jenkins, Gitlab, Temporal, Argo.
